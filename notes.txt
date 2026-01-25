@@ -1,0 +1,4 @@
+- I can add a gaussian noise to the input of C and h
+- I could do a PCE (polinomial chao expansion), how my predictions are changing, at the expenses of how much resource i am getting the same amount of accuracy as PCE.
+- I can get uncertinty direclty from PCE
+- if im having 100 data im getting the same accucary as 1000 data?
