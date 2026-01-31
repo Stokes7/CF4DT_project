@@ -25,7 +25,7 @@ def plot_JPDF(df_true, df_pred, bins, x_label, y_label):
     df_pred = df_pred[mask]
 
     # 2D histogram
-    hist, x_edges, y_edges = np.histogram2d(df_true, df_pred, bins=bins)
+    hist, x_edges, y_edges = np.histogram2d(df_true, df_pred, density=True, bins=bins)
 
     # Use only positive bins for LogNorm
     positive_bins = hist[hist > 0]
@@ -54,7 +54,7 @@ def plot_JPDF(df_true, df_pred, bins, x_label, y_label):
         aspect="auto",
         cmap="magma",
         norm=LogNorm(vmin=vmin, vmax=vmax),
-        interpolation="bilinear",
+        interpolation="nearest",
     )
 
     # Metrics
