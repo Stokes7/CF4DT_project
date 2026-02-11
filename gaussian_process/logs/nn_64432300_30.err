@@ -1,0 +1,31 @@
+usage: train_gp_curve_cpu_exact.py [-h] [--data_glob DATA_GLOB]
+                                   [--splits_dir SPLITS_DIR]
+                                   [--out_dir OUT_DIR] [--seed SEED] --n_train
+                                   N_TRAIN [--l L] [--sigma_f SIGMA_F]
+                                   [--sigma_n SIGMA_N]
+                                   [--max_exact_n MAX_EXACT_N]
+train_gp_curve_cpu_exact.py: error: argument --seed: expected one argument
+Command exited with non-zero status 2
+	Command being timed: "/home/zp252136/lectures/digital_twins/Project/env/bin/python train_gp_curve_cpu_exact.py --splits_dir ./splits_uq --out_dir ./gp_results --seed --n_train 4000 --l 0.2 --sigma_f 1.0 --sigma_n 1e-3"
+	User time (seconds): 2.23
+	System time (seconds): 0.18
+	Percent of CPU this job got: 351%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.68
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 107452
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 28987
+	Voluntary context switches: 1368
+	Involuntary context switches: 12
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 2

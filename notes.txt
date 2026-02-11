@@ -2,3 +2,98 @@
 - I could do a PCE (polinomial chao expansion), how my predictions are changing, at the expenses of how much resource i am getting the same amount of accuracy as PCE.
 - I can get uncertinty direclty from PCE
 - if im having 100 data im getting the same accucary as 1000 data?
+
+
+Sí, es adecuado decirlo **con matices**. La comparación típica de “scaling” es:
+
+* **GP exacto**: entrenamiento (\mathcal{O}(N^3)), memoria (\mathcal{O}(N^2))
+* **NN (mini-batch SGD)**: entrenamiento ≈ (\mathcal{O}(N)) por epoch (y (\mathcal{O}(E,N)) si haces (E) epochs), memoria ≈ (\mathcal{O}(P)) para parámetros + activaciones por batch
+
+Pero hay que decirlo con precisión para que sea correcto científicamente.
+
+---
+
+## 1) GP exacto (lo que tú estás pensando)
+
+Para un GP estándar con kernel denso:
+
+* Construir (K): (\mathcal{O}(N^2 \cdot d))
+* Factorización/solve (Cholesky): (\mathcal{O}(N^3))
+* Memoria: (\mathcal{O}(N^2))
+
+Predicción en (N_*) puntos:
+
+* media: (\mathcal{O}(N,N_*))
+* var (diagonal): (\mathcal{O}(N^2,N_*)) si haces var completa; a veces se optimiza
+
+Así que sí: **GP exacto escala fatal con N**.
+
+---
+
+## 2) NN: ¿crece como (N)?
+
+Con mini-batching:
+
+* Costo por paso ~ constante (depende del tamaño de la red, (P))
+* pasos por epoch ≈ (N/B)
+* por (E) epochs ⇒ costo ≈ (\mathcal{O}(E \cdot N))
+
+Entonces **para arquitectura fija y batch size fijo**, el tiempo crece aproximadamente **lineal en N** *si E no cambia mucho*.
+
+✅ En tu caso (misma red, batch fijo, epochs max fijo, early stopping):
+**es razonable decir:** “el costo de entrenamiento escala aproximadamente lineal con N”.
+
+Pero el matiz clave es:
+
+> NN no es “(\mathcal{O}(N))” en absoluto; es (\mathcal{O}(E,N)), y (E) (epochs reales) puede depender de N (por early stopping / convergencia).
+
+Aun así, comparado con (N^3), es abismal.
+
+---
+
+## 3) Comparación más “justa” para el reporte
+
+Puedes comparar **tres cosas**:
+
+### A) Tiempo de entrenamiento vs N
+
+* GP exacto: ~(N^3)
+* NN: ~(N) (aprox) para epochs fijos / entrenamiento similar
+
+### B) Memoria vs N
+
+* GP exacto: ~(N^2)
+* NN: ~constante respecto a N (más exactamente: depende del batch, no del dataset)
+
+### C) Tiempo de inferencia
+
+* NN: ~(\mathcal{O}(N_*)) (lineal en número de puntos a predecir)
+* GP exacto: media ~(\mathcal{O}(N,N_*)) (depende de N_train)
+
+Esto último es importante: incluso si entrenas una vez, **el GP “paga N_train” cada vez que predices**, mientras que la NN no.
+
+---
+
+## 4) Frase lista para tu tesis/reporte (bien formulada)
+
+Puedes escribir algo como:
+
+> “Exact Gaussian Process regression requires (\mathcal{O}(N^3)) time and (\mathcal{O}(N^2)) memory due to kernel matrix factorization, which limits scalability. In contrast, training a fixed-size neural network with mini-batch gradient descent scales approximately linearly with the number of training samples per epoch ((\mathcal{O}(N))), resulting in an overall cost of (\mathcal{O}(E,N)) for (E) epochs. Moreover, NN inference cost is independent of (N), whereas GP prediction depends on the training set size.”
+
+Esa comparación es correcta y defendible.
+
+---
+
+## 5) Bonus: si tu GP no es exacto
+
+Si usas **Sparse GP / inducing points** (M inducing points):
+
+* entrenamiento ~(\mathcal{O}(N M^2))
+* memoria ~(\mathcal{O}(N M))
+
+Ahí ya no es (N^3), y la comparación se mueve.
+
+---
+
+Si quieres, te digo exactamente qué curvas plotear para demostrarlo con tus resultados (log-log) y cómo ajustar una pendiente para mostrar “~N” vs “~N^3”.
+

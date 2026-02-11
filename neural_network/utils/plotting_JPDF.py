@@ -69,8 +69,8 @@ def plot_JPDF(df_true, df_pred, bins, x_label, y_label):
     ax.set_ylabel(y_label)
 
     # Colorbar
-    formatter = LogFormatter(labelOnlyBase=False)
-    cbar = fig.colorbar(im, ax=ax, format=formatter)
+    #formatter = LogFormatter(labelOnlyBase=False)
+    cbar = fig.colorbar(im, ax=ax)#, format=formatter)
     cbar.set_label("jPDF (log scale)")
 
     plt.tight_layout()

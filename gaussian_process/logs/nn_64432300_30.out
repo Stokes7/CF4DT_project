@@ -1,0 +1,10 @@
+python in PATH: /usr/bin/python
+exe: /usr/bin/python
+usersite: /home/zp252136/.local/lib/python3.9/site-packages
+========================================
+Job ID       : 64432300
+Array task   : 30
+Seed         : 
+N_train      : 4000
+CPUs         : 8
+========================================

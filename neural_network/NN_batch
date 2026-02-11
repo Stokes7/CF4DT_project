@@ -1,0 +1,83 @@
+#!/bin/bash
+#SBATCH --job-name=nn_curve
+#SBATCH --partition=c23mm              # 
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8             
+#SBATCH --mem=40G                     
+#SBATCH --time=00:20:00               # ajusta según N_train máximo
+#SBATCH --array=0-34                  # (7 N_train) x (5 seeds) = 35 jobs
+#SBATCH --output=logs/nn_%A_%a.out
+#SBATCH --error=logs/nn_%A_%a.err
+
+# -------------------------
+# Safety & setup
+# -------------------------
+set -e
+ulimit -s unlimited
+
+mkdir -p logs
+mkdir -p nn_results
+
+# -------------------------
+# Load environment
+# -------------------------
+module purge
+# module load pytorch     # si tu cluster lo separa
+
+# Opcional: activar venv
+source ~/lectures/digital_twins/Project/env/bin/activate
+echo "python in PATH: $(command -v python)"
+python -c "import sys; print('exe:', sys.executable); import site; print('usersite:', site.getusersitepackages())"
+
+
+# -------------------------
+# Experiment grid
+# -------------------------
+# Training sizes (must match splits_uq)
+TRAIN_SIZES=(4000 8000 12000 16000 20000 24000 32000)
+SEEDS=(0 1 2 3 4)
+
+N_TRAIN_SIZES=${#TRAIN_SIZES[@]}
+N_SEEDS=${#SEEDS[@]}
+
+# -------------------------
+# Decode SLURM array index
+# -------------------------
+IDX=${SLURM_ARRAY_TASK_ID}
+
+SEED_INDEX=$(( IDX / N_TRAIN_SIZES ))
+N_INDEX=$(( IDX % N_TRAIN_SIZES ))
+
+SEED=${SEEDS[$SEED_INDEX]}
+N_TRAIN=${TRAIN_SIZES[$N_INDEX]}
+
+echo "========================================"
+echo "Job ID       : $SLURM_JOB_ID"
+echo "Array task   : $SLURM_ARRAY_TASK_ID"
+echo "Seed         : $SEED"
+echo "N_train      : $N_TRAIN"
+echo "CPUs         : $SLURM_CPUS_PER_TASK"
+echo "========================================"
+
+# -------------------------
+# Limit threads (IMPORTANT)
+# -------------------------
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export MKL_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export OPENBLAS_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export NUMEXPR_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+# -------------------------
+# Run training
+# -------------------------
+/usr/bin/time -v ~/lectures/digital_twins/Project/env/bin/python train_nn_curve_cpu.py \
+    --data_glob "data/chemtable_FVV_2D_Enthalpy/*.kg" \
+    --splits_dir "./splits_uq" \
+    --seed ${SEED} \
+    --n_train ${N_TRAIN} \
+    --epochs 300 \
+    --batch_size 4096 \
+    --out_dir "./nn_results"
+
+echo "Finished job seed=${SEED}, N_train=${N_TRAIN}"

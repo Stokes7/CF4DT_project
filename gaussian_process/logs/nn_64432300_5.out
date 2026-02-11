@@ -1,0 +1,14 @@
+python in PATH: /usr/bin/python
+exe: /usr/bin/python
+usersite: /home/zp252136/.local/lib/python3.9/site-packages
+========================================
+Job ID       : 64432309
+Array task   : 5
+Seed         : 0
+N_train      : 24000
+CPUs         : 8
+========================================
+Saved: ./gp_results/gp_exact_seed0_N24000.json
+rrmse_mean=0.003419 | r2_mean=0.999937
+K_train_mb=4394.5 | cpu_rss_peak_mb=17824.8
+Finished job seed=0, N_train=24000

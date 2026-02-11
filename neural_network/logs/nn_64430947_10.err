@@ -1,0 +1,23 @@
+	Command being timed: "/home/zp252136/lectures/digital_twins/Project/env/bin/python train_nn_curve_cpu.py --data_glob data/chemtable_FVV_2D_Enthalpy/*.kg --splits_dir ./splits_uq --seed 1 --n_train 16000 --epochs 300 --batch_size 4096 --out_dir ./nn_results"
+	User time (seconds): 1969.65
+	System time (seconds): 21.31
+	Percent of CPU this job got: 668%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:57.61
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 633260
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 885221
+	Voluntary context switches: 6681679
+	Involuntary context switches: 617096
+	Swaps: 0
+	File system inputs: 24
+	File system outputs: 112
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
